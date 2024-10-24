@@ -2,90 +2,91 @@
 
 ## Automatické generování a zasílání e-mailů z dat v Excelu
 
-Tento VBA skript automatizuje proces vytváření e-mailu pomocí aplikace Microsoft Outlook. E-mail obsahuje informace o nové objednávce, včetně adresy a popisu, a umožňuje příjemci potvrdit zahájení nebo ukončení práce prostřednictvím kliknutelných tlačítek.
+Toto makro slouží k automatizovanému vytvoření a odeslání e-mailu prostřednictvím aplikace Microsoft Outlook. E-mail obsahuje informace o objednávce a interaktivní tlačítka, která příjemci umožňují potvrdit přijetí a realizaci objednávky.
 
-## Předpoklady
+## Popis funkcionality
 
-### Listy Excelu:
-- **`InfoOdesilatel`**: Obsahuje informace o odesílatelích (iniciály, jméno, příjmení, e-mail, telefon atd.).
-- **`InfoPrijemce`**: Obsahuje informace o příjemcích (jméno a e-mail).
-- **`Seznam požadavků`**: List obsahující seznam objednávek, ze kterého skript čte data potřebná k sestavení e-mailu.
+1. **Získání dat z Excelu**: 
+   - Makro pracuje s daty uloženými v různých listech Excelu, konkrétně z listů **"InfoOdesilatel"**, **"InfoPrijemce"** a **"Seznam požadavků"**. 
+   - Na základě aktuálně vybrané buňky (řádku) makro načte klíčové informace o objednávce a zpracovává je do e-mailové zprávy.
 
-### Microsoft Outlook:
-- Tento skript vyžaduje aplikaci Microsoft Outlook pro vytváření a odesílání e-mailů.
+2. **Dynamické generování těla e-mailu**: 
+   - E-mail je automaticky sestaven z předdefinovaných šablon, přičemž se do zprávy doplňují hodnoty z buněk Excelu (např. číslo objednávky, popis, místo objednávky, odesilatel a příjemce).
+   - Pokud je vyplněno číslo bytu, do textu zprávy se zahrne i toto číslo.
 
-## Funkce
+3. **Generování tlačítek**:
+   - Součástí e-mailu jsou dvě tlačítka: jedno pro potvrzení přijetí objednávky a druhé pro potvrzení realizace objednávky.
+   - Tlačítka jsou hypertextové odkazy, které otevřou nový e-mail v Outlooku s předvyplněným předmětem a tělem zprávy.
 
-### `VytvorEmailSObjednavkouATlacitky`
+4. **Načtení informací o odesílateli a příjemci**:
+   - Na základě iniciál zadaných v listu "Seznam požadavků" makro hledá odpovídající údaje o odesílateli a příjemci v listech "InfoOdesilatel" a "InfoPrijemce".
+   - Pokud není odesilatel nebo příjemce nalezen, makro zobrazí chybovou hlášku.
 
-Tato procedura automaticky generuje e-mail s HTML formátováním, který obsahuje:
-- **Číslo objednávky**: Unikátní identifikátor objednávky.
-- **Popis objednávky**: Stručný popis práce nebo úkolu, který je objednáván.
-- **Adresa**: Informace o adrese, včetně ulice, čísla objektu a případně čísla bytu.
-- **Tlačítka pro potvrzení**: HTML tlačítka, která příjemci umožňují potvrdit přijetí objednávky, zahájení práce nebo ukončení práce.
-  - **Potvrdit přijetí objednávky**
-  - **Potvrdit realizaci objednávky**
+5. **Vytvoření a zobrazení e-mailu**: 
+   - Vytvořený e-mail se zobrazí v okně Outlooku pro kontrolu. E-mail je možné buď okamžitě odeslat, nebo před odesláním upravit.
 
-### Přehled klíčových kroků
+## Vstupní data
 
-1. **Načtení údajů o odesílateli a příjemci**:
-   - Z listu `InfoOdesilatel` se načtou iniciály odesílatele, podle kterých se vyhledá kompletní jméno, e-mail a další kontaktní informace.
-   - Z listu `InfoPrijemce` se načte jméno příjemce a podle něj se vyhledá e-mailová adresa.
+Makro čte následující data z listů Excelu:
 
-2. **Načtení údajů o objednávce**:
-   - Skript čte číslo objednávky, popis objednávky a adresu z aktivního řádku v listu `Seznam požadavků`.
+### Seznam požadavků (hlavní list)
+- **Číslo objednávky**: sloupec 3
+- **Ulice**: sloupec 4
+- **Číslo objektu**: sloupec 5
+- **Číslo bytu**: sloupec 6
+- **Kategorie**: sloupec 7
+- **Popis objednávky**: sloupec 8
+- **Zapsal (iniciály odesílatele)**: sloupec 11
+- **Příjemce**: sloupec 17
 
-3. **Vytvoření e-mailu**:
-   - Na základě načtených dat se sestaví HTML tělo e-mailu obsahující všechny relevantní informace.
-   - E-mail také obsahuje tři tlačítka pro potvrzení různých akcí spojených s objednávkou.
+### InfoOdesilatel (list s údaji o odesílateli)
+- **Iniciály**: sloupec 2
+- **Titul**: sloupec 3
+- **Jméno**: sloupec 4
+- **Příjmení**: sloupec 5
+- **Hodnost**: sloupec 6
+- **Odbor**: sloupec 7
+- **Oddělení**: sloupec 8
+- **Město úřadu**: sloupec 9
+- **Adresa úřadu**: sloupec 10
+- **Telefon**: sloupec 11
+- **E-mail**: sloupec 12
+- **Web**: sloupec 13
 
-### HTML Struktura E-mailu
+### InfoPrijemce (list s údaji o příjemci)
+- **Příjemce (jméno)**: sloupec 2
+- **E-mail**: sloupec 3
 
-- **Hlavička**: Obsahuje pozdrav a základní informace o nové objednávce.
-- **Tělo zprávy**: Zahrnuje adresu a popis objednávky.
-- **Tlačítka**: Kliknutelné HTML tlačítka, která automaticky vytvoří odpověď na e-mail s příslušným předmětem, včetně příslušného stavu objednávky.
-  - **Zelené tlačítko**: Potvrzení přijetí objednávky.
-  - **Modré tlačítko**: Potvrzení realizace objednávky.
-  - **Červené tlačítko**: Třetí možnost akce.
-- **Podpis**: Kontaktní údaje odesílatele.
-- **Patička**: Upozornění o automatickém generování e-mailu.
+## Výstupní data
 
-## Použití
+### Tělo e-mailu
+- Obsahuje informace o objednávce včetně:
+  - Číslo objednávky
+  - Popis objednávky
+  - Místo objednávky (ulice, číslo domu a bytu)
+- Interaktivní tlačítka pro potvrzení přijetí a realizace objednávky.
+- Podpis odesílatele s kontaktními údaji.
 
-### Postup pro vytvoření e-mailu
-
-1. **Otevřete Excel**: Ujistěte se, že máte otevřený sešit s listy `InfoOdesilatel`, `InfoPrijemce` a `Seznam požadavků`.
-   
-2. **Vyberte řádek s objednávkou**: Klikněte na buňku v listu `Seznam požadavků`, která obsahuje objednávku, pro kterou chcete vygenerovat e-mail.
-
-3. **Spusťte makro**: Spusťte makro `VytvorEmailSObjednavkouATlacitky`.
-
-4. **Zkontrolujte e-mail**: E-mail bude automaticky vytvořen a zobrazen v aplikaci Microsoft Outlook. Můžete ho před odesláním zkontrolovat nebo rovnou odeslat.
-
-### Poznámky k používání
-
-- **Chybové hlášky**: Pokud není nalezen odesílatel nebo příjemce, zobrazí se chybová zpráva a proces se zastaví.
-- **Odesílání e-mailu**: E-mail je výchozí nastaven na zobrazení v Outlooku (`.Display`). Pokud chcete, aby byl automaticky odeslán, změňte tuto funkci na `.Send`.
-  
-## Výhody
-
-- **Automatizace**: Šetří čas tím, že automaticky vytváří e-maily z dat v Excelu.
-- **Interaktivní e-maily**: Umožňuje příjemcům snadno potvrdit různé fáze objednávky pomocí kliknutelných tlačítek.
-- **Personalizace**: Každý e-mail je automaticky personalizován podle údajů o objednávce, příjemci a odesílateli.
+### Předmět e-mailu
+- "Nová objednávka [Číslo objednávky] [Ulice a číslo domu/bytu]"
 
 ## Příklad použití
 
-Předpokládejme, že v listu `Seznam požadavků` máte následující objednávku:
+Toto makro je vhodné pro scénáře, kde je potřeba automatizovat komunikaci ohledně objednávek. Uživatel zadá informace do tabulky a makro na základě těchto informací automaticky vygeneruje a předvyplní e-mail, který je připraven k odeslání.
 
-| Číslo objednávky | Ulice      | Číslo objektu | Číslo bytu | Popis objednávky      | Iniciály odesílatele | Příjemce |
-|------------------|------------|---------------|------------|-----------------------|----------------------|----------|
-| 12345            | Dlouhá     | 12            | 5          | Oprava osvětlení      | JN                   | Novák    |
+## Chybová hlášení
 
-Po spuštění makra se vytvoří následující e-mail:
+- Pokud není nalezen odesílatel podle zadaných iniciál, zobrazí se chybová zpráva: 
+  `Nebylo nalezeno žádné příjmení začínající na [iniciály].`
+  
+- Pokud není nalezen příjemce, zobrazí se upozornění: 
+  `Nebyl nalezen žádný příjemce [jméno příjemce].`
 
-- **Předmět**: Nová objednávka 12345 Dlouhá 12_5
-- **Tělo**:
-  - Objednávka je na ulici Dlouhá v bytovém domě s číslem 12 a číslem bytu 5.
-  - Stručný popis objednávky: Oprava osvětlení.
-  - Tlačítka pro potvrzení přijetí a realizace objednávky.
+## Omezení a předpoklady
 
+- Makro předpokládá, že všechny potřebné údaje jsou správně vyplněny v příslušných listech.
+- Pokud nejsou data v listech kompletní, může dojít k chybám nebo nesprávnému fungování makra.
+  
+## Závěr
+
+Toto VBA makro poskytuje efektivní způsob, jak automatizovat proces vytváření objednávkových e-mailů s využitím dat z Excelu a aplikace Outlook. Správným nastavením dat a šablon e-mailů se zajišťuje konzistentní a rychlá komunikace mezi odesílatelem a příjemcem objednávek.
