@@ -1,53 +1,91 @@
-# Automatic Email From Excel
+# Automatic Email from Excel
 
-## Automatické generování a zasílání emailů z dat v Excelu
+## Automatické generování a zasílání e-mailů z dat v Excelu
 
-Tento VBA skript automatizuje proces vytváření e-mailu pomocí aplikace Microsoft Outlook. E-mail obsahuje informace o nové objednávce, včetně adresy a popisu, a poskytuje příjemci možnost potvrdit zahájení nebo ukončení práce prostřednictvím kliknutelných tlačítek.
+Tento VBA skript automatizuje proces vytváření e-mailu pomocí aplikace Microsoft Outlook. E-mail obsahuje informace o nové objednávce, včetně adresy a popisu, a umožňuje příjemci potvrdit zahájení nebo ukončení práce prostřednictvím kliknutelných tlačítek.
 
-### Předpoklady
+## Předpoklady
 
-1. **Listy Excelu**:
-    - **`InfoOdesilatel`**: Obsahuje informace o odesílatelích (iniciály, jméno, příjmení, e-mail atd.).
-    - **`InfoPrijemce`**: Obsahuje informace o příjemcích (jméno a e-mail).
-    - **`Seznam požadavků`**: List, který obsahuje jednotlivé objednávky, z něhož skript čte data.
+### Listy Excelu:
+- **`InfoOdesilatel`**: Obsahuje informace o odesílatelích (iniciály, jméno, příjmení, e-mail, telefon atd.).
+- **`InfoPrijemce`**: Obsahuje informace o příjemcích (jméno a e-mail).
+- **`Seznam požadavků`**: List obsahující seznam objednávek, ze kterého skript čte data potřebná k sestavení e-mailu.
 
-2. **Outlook**: Skript vyžaduje aplikaci Microsoft Outlook pro zasílání e-mailů.
+### Microsoft Outlook:
+- Tento skript vyžaduje aplikaci Microsoft Outlook pro vytváření a odesílání e-mailů.
 
-### Funkce
+## Funkce
 
-#### `VytvorEmailSObjednavkouATlacitky`
+### `VytvorEmailSObjednavkouATlacitky`
 
-Tato funkce automaticky generuje e-mail s HTML tělem, který obsahuje následující části:
+Tato procedura automaticky generuje e-mail s HTML formátováním, který obsahuje:
+- **Číslo objednávky**: Unikátní identifikátor objednávky.
+- **Popis objednávky**: Stručný popis práce nebo úkolu, který je objednáván.
+- **Adresa**: Informace o adrese, včetně ulice, čísla objektu a případně čísla bytu.
+- **Tlačítka pro potvrzení**: HTML tlačítka, která příjemci umožňují potvrdit přijetí objednávky, zahájení práce nebo ukončení práce.
+  - **Potvrdit přijetí objednávky**
+  - **Potvrdit realizaci objednávky**
 
-- **Číslo objednávky**: Zobrazuje číslo objednávky v těle e-mailu.
-- **Popis objednávky**: Krátký popis objednané práce.
-- **Adresa**: Včetně ulice, čísla objektu a bytu (pokud je relevantní).
-- **Tlačítka pro akce**: Tři tlačítka umožňují příjemci potvrdit různé akce:
-  1. Potvrzení přijetí objednávky.
-  2. Potvrzení zahájení realizace objednávky.
-  3. Třetí možnost pro přizpůsobení (např. doplňková akce).
-  
-#### Příjemce
+### Přehled klíčových kroků
 
-- E-mail je automaticky adresován příjemci, jehož e-mailová adresa je načtena z listu `InfoPrijemce`.
+1. **Načtení údajů o odesílateli a příjemci**:
+   - Z listu `InfoOdesilatel` se načtou iniciály odesílatele, podle kterých se vyhledá kompletní jméno, e-mail a další kontaktní informace.
+   - Z listu `InfoPrijemce` se načte jméno příjemce a podle něj se vyhledá e-mailová adresa.
 
-### Postup
+2. **Načtení údajů o objednávce**:
+   - Skript čte číslo objednávky, popis objednávky a adresu z aktivního řádku v listu `Seznam požadavků`.
 
-1. **Příprava dat**:
-   - Otevřete sešit Excel, který obsahuje listy `InfoOdesilatel`, `InfoPrijemce` a `Seznam požadavků`.
+3. **Vytvoření e-mailu**:
+   - Na základě načtených dat se sestaví HTML tělo e-mailu obsahující všechny relevantní informace.
+   - E-mail také obsahuje tři tlačítka pro potvrzení různých akcí spojených s objednávkou.
+
+### HTML Struktura E-mailu
+
+- **Hlavička**: Obsahuje pozdrav a základní informace o nové objednávce.
+- **Tělo zprávy**: Zahrnuje adresu a popis objednávky.
+- **Tlačítka**: Kliknutelné HTML tlačítka, která automaticky vytvoří odpověď na e-mail s příslušným předmětem, včetně příslušného stavu objednávky.
+  - **Zelené tlačítko**: Potvrzení přijetí objednávky.
+  - **Modré tlačítko**: Potvrzení realizace objednávky.
+  - **Červené tlačítko**: Třetí možnost akce.
+- **Podpis**: Kontaktní údaje odesílatele.
+- **Patička**: Upozornění o automatickém generování e-mailu.
+
+## Použití
+
+### Postup pro vytvoření e-mailu
+
+1. **Otevřete Excel**: Ujistěte se, že máte otevřený sešit s listy `InfoOdesilatel`, `InfoPrijemce` a `Seznam požadavků`.
    
-2. **Výběr objednávky**:
-   - Vyberte příslušnou objednávku v listu `Seznam požadavků` (aktivní buňka v řádku musí obsahovat data objednávky).
+2. **Vyberte řádek s objednávkou**: Klikněte na buňku v listu `Seznam požadavků`, která obsahuje objednávku, pro kterou chcete vygenerovat e-mail.
 
-3. **Spuštění makra**:
-   - Spusťte makro `VytvorEmailSObjednavkouATlacitky` (například z Editoru VBA nebo přiřazeného tlačítka).
+3. **Spusťte makro**: Spusťte makro `VytvorEmailSObjednavkouATlacitky`.
 
-4. **Vytvoření a zobrazení e-mailu**:
-   - Makro automaticky vytvoří e-mail s předvyplněnými údaji a zobrazí ho v aplikaci Outlook. E-mail bude připraven k manuálnímu odeslání. 
-   - Pokud chcete e-mail automaticky odeslat, můžete změnit `.Display` na `.Send`.
+4. **Zkontrolujte e-mail**: E-mail bude automaticky vytvořen a zobrazen v aplikaci Microsoft Outlook. Můžete ho před odesláním zkontrolovat nebo rovnou odeslat.
 
-### Poznámky
+### Poznámky k používání
 
-- Pokud nejsou nalezeni příjemce nebo odesílatel podle zadaných údajů, skript zobrazí upozornění a ukončí se.
-- **Přizpůsobení**: Makro lze přizpůsobit podle potřeby, například přidáním dalších informací do těla e-mailu nebo přidáním dalších funkcionalit.
+- **Chybové hlášky**: Pokud není nalezen odesílatel nebo příjemce, zobrazí se chybová zpráva a proces se zastaví.
+- **Odesílání e-mailu**: E-mail je výchozí nastaven na zobrazení v Outlooku (`.Display`). Pokud chcete, aby byl automaticky odeslán, změňte tuto funkci na `.Send`.
   
+## Výhody
+
+- **Automatizace**: Šetří čas tím, že automaticky vytváří e-maily z dat v Excelu.
+- **Interaktivní e-maily**: Umožňuje příjemcům snadno potvrdit různé fáze objednávky pomocí kliknutelných tlačítek.
+- **Personalizace**: Každý e-mail je automaticky personalizován podle údajů o objednávce, příjemci a odesílateli.
+
+## Příklad použití
+
+Předpokládejme, že v listu `Seznam požadavků` máte následující objednávku:
+
+| Číslo objednávky | Ulice      | Číslo objektu | Číslo bytu | Popis objednávky      | Iniciály odesílatele | Příjemce |
+|------------------|------------|---------------|------------|-----------------------|----------------------|----------|
+| 12345            | Dlouhá     | 12            | 5          | Oprava osvětlení      | JN                   | Novák    |
+
+Po spuštění makra se vytvoří následující e-mail:
+
+- **Předmět**: Nová objednávka 12345 Dlouhá 12_5
+- **Tělo**:
+  - Objednávka je na ulici Dlouhá v bytovém domě s číslem 12 a číslem bytu 5.
+  - Stručný popis objednávky: Oprava osvětlení.
+  - Tlačítka pro potvrzení přijetí a realizace objednávky.
+
