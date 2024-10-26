@@ -124,7 +124,7 @@ Sub GenerateEmailWithOrderAndButtons()
                 "<p style='margin: 0;'>tímto vytváříme novou objednávku číslo: <b>" & CisloObjednavky & "</b>.</p>" & _
                 "<p style='margin: 0;'>stručný popis objednávky: <b>" & PopisObjednavky & "</b>.</p></div>"
                  
-    TeloPodpis = "<div><div style='color: blue; line-height: 1;'>" & _
+    TeloPodpis = "<div><div style='color: blue; line-height: 1; '>" & _
                 "<p style='margin-top: 30; margin-bottom: 0'><b>" & TitulOdesilatele & " " & JmenoOdesilatele & " " & PrijmeniOdesilatele & "</b></p>" & _
                 "<p style='margin-top: 0; margin-bottom: 0'>" & HodnostOdesilatele & "</p>" & _
                 "<p style='margin-top: 0; margin-bottom: 0'>" & OdborOdesilatele & "</p>" & _
@@ -176,3 +176,4 @@ Sub GenerateEmailWithOrderAndButtons()
     Set OutlookMail = Nothing
     Set OutlookApp = Nothing
 End Sub
+
