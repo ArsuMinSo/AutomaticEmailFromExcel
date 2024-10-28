@@ -5,6 +5,8 @@ Sub GenerateEmailWithOrderAndButtons()
     
     Dim CisloObjednavky As String
     Dim PopisObjednavky As String
+    Dim KontaktHlaseneho As String
+    Dim Nahlasil As String
     Dim Ulice As String
     Dim CisloObjektu As String
     Dim CisloBytu As String
@@ -14,6 +16,7 @@ Sub GenerateEmailWithOrderAndButtons()
     
     Dim TelozpravyMisto As String
     Dim TextObjednavka As String
+    Dim TextKontaktNaHlasene As String
     Dim TextPodpisPrijemce As String
     Dim TeloObjednavka As String
     Dim TeloTlacitka As String
@@ -31,9 +34,11 @@ Sub GenerateEmailWithOrderAndButtons()
     Dim MestoUradu As String
     Dim AdresaUradu As String
     Dim TelefonOdesilatele As String
-    Dim Web As String
-    
     Dim EmailOdesilatele As String
+    Dim TextTelefon As String
+    Dim Web As String
+    Dim TextWeb As String
+
     Dim EmailPrijemce As String
     
     Dim Zapsal As String
@@ -64,6 +69,8 @@ Sub GenerateEmailWithOrderAndButtons()
     CisloBytu = Cells(r, 6).Value ' Číslo bytu
     Kategorie = Cells(r, 7).Value ' Kategorie
     PopisObjednavky = Cells(r, 8).Value ' Popis objednávky
+    KontaktHlaseneho = Cells(r, 9).Value ' Kontakt na člověka, co to nahlásil
+    Hlasil = Cells(r, 10).Value ' Jméno toho, co to nahláslil
     Zapsal = Cells(r, 11).Value ' Iniciály odesílatele
     Prijemce = Cells(r, 17).Value ' Příjemce
 
@@ -111,40 +118,50 @@ Sub GenerateEmailWithOrderAndButtons()
         TelozpravyMisto = "<p>Objednávka je na ulici: <b>" & Ulice & " v domě s číslem: " & CisloObjektu & "</b>.</p>"
     End If
 
-    If Not CisloBytu = "" Then
-        UliceSCislemDomuABytu = "" & Ulice & " " & CisloObjektu & "_" & CisloBytu
-    Else
-        UliceSCislemDomuABytu = "" & Ulice & " " & CisloObjektu
+    If Not Web = "" Then
+        TextWeb = "<p style='margin-top: 0; margin-bottom: 0'>Web: <a href =" & Web & ">" & Web & "</a></p></div>"
     End If
 
-    TextObjednavka = "Dobrý den, %0Atímto vytváříme novou objednávku číslo: " & CisloObjednavky & "%0Astručný popis objednávky: " & PopisObjednavky & "."
+    If Not TelefonOdesilatele = "" Then
+        TextTelefon = "<p style='margin-top: 0; margin-bottom: 0'>Tel: " & TelefonOdesilatele & "</p>"
+    End If
+
+    If Not KontaktHlaseneho = "" And Not Hlasil = "" Then
+        TextKontaktNaHlasene = "Závadu nahlásil/a: " + Hlasil + ", kontakt na osobu: " + KontaktHlaseneho
+    End If
+        
+    TextObjednavka = "Dobrý den, %0Atímto vytváříme novou objednávku číslo: " & CisloObjednavky & "%0Astručný popis objednávky: " & PopisObjednavky & ".%0A" & KontaktHlaseneho
     TextPodpisPrijemce = ""
 
     TeloObjednavka = "<div><p style='margin: 0;'>Dobrý den,</p>" & _
                 "<p style='margin: 0;'>tímto vytváříme novou objednávku číslo: <b>" & CisloObjednavky & "</b>.</p>" & _
-                "<p style='margin: 0;'>stručný popis objednávky: <b>" & PopisObjednavky & "</b>.</p></div>"
+                "<p style='margin: 0;'>stručný popis objednávky: <b>" & PopisObjednavky & "</b>.</p>" & _
+                TextKontaktNaHlasene + "</div>"
                  
-    TeloPodpis = "<div><div style='color: blue; line-height: 1; '>" & _
+    TeloPodpis = "<div><div style='color: blue; line-height: 1;'>" & _
                 "<p style='margin-top: 30; margin-bottom: 0'><b>" & TitulOdesilatele & " " & JmenoOdesilatele & " " & PrijmeniOdesilatele & "</b></p>" & _
                 "<p style='margin-top: 0; margin-bottom: 0'>" & HodnostOdesilatele & "</p>" & _
                 "<p style='margin-top: 0; margin-bottom: 0'>" & OdborOdesilatele & "</p>" & _
                 "<p style='margin-top: 0; margin-bottom: 20'>" & OdeleniOdesilatele & "</p>" & _
                 "<p style='margin-top: 0; margin-bottom: 0'><b>" & MestoUradu & "</b></p>" & _
                 "<p style='margin-top: 0; margin-bottom: 0'>" & AdresaUradu & "</p>" & _
-                "<p style='margin-top: 0; margin-bottom: 0'>Tel: " & TelefonOdesilatele & "</p>" & _
-                "<p style='margin-top: 0; margin-bottom: 0'>Web: <a href =" & Web & ">" & Web & "</a></p></div>" & _
+                TextTelefon & _
+                TextWeb & _
                 "<p style='color: green; margin-top: 20; margin-bottom: 12'>Myslete na přírodu. Skutečně potřebujete vytisknout tento e-mail?</p>" & _
                 "<p style='color: blue; margin-top: 20; margin-bottom: 12'>Obsah tohoto e-mailu včetně jeho příloh je důvěrný. Pokud nejste oprávněným adresátem tohoto emailu, <b>nejste oprávněni tuto zprávu odeslat, uložit ji, zveřejnit či naložit s ní jakýmkoliv jiným způsobem</b>. V takovém případě prosím informujte odesílatele a tento e-mail včetně jeho příloh vymažte trvale ze svého systému.</p></div>"
 
+    ' Moje iniciály
     TeloPata = "<div><hr style='border:none; border-top:1px solid #ccc;'/>" & _
                 "<p style='font-size:11px; color:#555; font-style:italic; text-align:center;'>Tento e-mail byl automaticky generován systémem.</p>" & _
                 "<p style='font-size:11px; color:#555; text-align:center;'>Vytvořil Šimon Raus | <a href='mailto:simon.raus@email.cz' style='color:#666; text-decoration:none;'>simon.raus@email.cz</a></p></div>"
-                 
+    
+    ' Tlačítka
     TeloTlacitka = "<p style='margin: 0;'>S pozdravem,<br>" & JmenoOdesilatele & " " & PrijmeniOdesilatele & "</p>" & _
                 "<p style='margin-top: 30px;'>Zároveň Vás žádáme o potvrzení této objednávky níže uvedeným tlačítkem. Jakmile budete zahajovat realizaci objednávky, tak nás opět informujte kliknutím na tlačítko „Potvrdit realizaci objednávky“</p>" & _
-                "<a href='mailto:" & EmailOdesilatele & "?subject=Objednávka " & CisloObjednavky & " " & UliceSCislemDomuABytu & "-PŘIJATO?body=" & TextObjednavka & " ' style='padding:10px 20px; background-color:#4CAF50; color:white; text-decoration:none;'>Potvrdit přijetí objednávky</a>    " & _
+                "<a href='mailto:" & EmailOdesilatele & "?subject=Objednávka " & CisloObjednavky & " " & UliceSCislemDomuABytu & "-PŘIJATO?body=" & TextObjednavka & "' style='padding:10px 20px; background-color:#4CAF50; color:white; text-decoration:none;'>Potvrdit přijetí objednávky</a>    " & _
                 "<a href='mailto:" & EmailOdesilatele & "?subject=Objednávka " & CisloObjednavky & " " & UliceSCislemDomuABytu & "-ZAHÁJENO?body=" & TextObjednavka & "' style='padding:10px 20px; background-color:#008CBA; color:white; text-decoration:none;'>Potvrdit realizaci objednávky</a>    "
 
+    ' tělo zprávy staví kompletní email dohromady
     TeloZpravy = "<html><body>" & _
                 TeloObjednavka & _
                 TeloTlacitka & _
