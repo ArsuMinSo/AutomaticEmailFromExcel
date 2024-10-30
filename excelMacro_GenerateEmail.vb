@@ -17,7 +17,7 @@ Sub GenerateEmailWithOrderAndButtons()
     Dim TelozpravyMisto As String
     Dim TextObjednavka As String
     Dim TextKontaktNaHlasene As String
-    Dim TextPodpisPrijemce As String
+    Dim TextPozdrav As String
     Dim TeloObjednavka As String
     Dim TeloTlacitka As String
     Dim TeloPodpis As String
@@ -129,9 +129,9 @@ Sub GenerateEmailWithOrderAndButtons()
     If Not KontaktHlaseneho = "" And Not Hlasil = "" Then
         TextKontaktNaHlasene = "Závadu nahlásil/a: " + Hlasil + ", kontakt na osobu: " + KontaktHlaseneho
     End If
-        
-    TextObjednavka = "Dobrý den, %0Atímto vytváříme novou objednávku číslo: " & CisloObjednavky & "%0Astručný popis objednávky: " & PopisObjednavky & ".%0A" & KontaktHlaseneho
-    TextPodpisPrijemce = ""
+    
+    TextPozdrav = "Dobrý den, %0Atímto"
+    TextObjednavka = "objednávky číslo: " & CisloObjednavky & "%0Astručný popis objednávky: " & PopisObjednavky & ".%0A" & KontaktHlaseneho
 
     TeloObjednavka = "<div><p style='margin: 0;'>Dobrý den,</p>" & _
                 "<p style='margin: 0;'>tímto vytváříme novou objednávku číslo: <b>" & CisloObjednavky & "</b>.</p>" & _
@@ -152,15 +152,16 @@ Sub GenerateEmailWithOrderAndButtons()
 
     ' Moje iniciály
     TeloPata = "<div><hr style='border:none; border-top:1px solid #ccc;'/>" & _
-                "<p style='font-size:11px; color:#555; font-style:italic; text-align:center;'>Tento e-mail byl automaticky generován systémem.</p>" & _
-                "<p style='font-size:11px; color:#555; text-align:center;'>Vytvořil Šimon Raus | <a href='mailto:simon.raus@email.cz' style='color:#666; text-decoration:none;'>simon.raus@email.cz</a></p></div>"
+                "<p style='font-size:9px; color:#555; font-style:italic; text-align:center; margin-top: 0; margin-bottom: 0'>This message was generated automatically by the system based on a standard email template.</p>" & _
+                "<p style='font-size:9px; color:#555; text-align:center; margin-top: 0; margin-bottom: 0'>Template created by: Šimon Raus | <a href='mailto:simon.raus@email.cz' style='color:#666; text-decoration:none;'>simon.raus@email.cz</a></p></div>"
     
     ' Tlačítka
     TeloTlacitka = "<p style='margin: 0;'>S pozdravem,<br>" & JmenoOdesilatele & " " & PrijmeniOdesilatele & "</p>" & _
                 "<p style='margin-top: 30px;'>Zároveň Vás žádáme o potvrzení této objednávky níže uvedeným tlačítkem. Jakmile budete zahajovat realizaci objednávky, tak nás opět informujte kliknutím na tlačítko „Potvrdit realizaci objednávky“</p>" & _
-                "<a href='mailto:" & EmailOdesilatele & "?subject=Objednávka " & CisloObjednavky & " " & UliceSCislemDomuABytu & "-PŘIJATO?body=" & TextObjednavka & "' style='padding:10px 20px; background-color:#4CAF50; color:white; text-decoration:none;'>Potvrdit přijetí objednávky</a>    " & _
-                "<a href='mailto:" & EmailOdesilatele & "?subject=Objednávka " & CisloObjednavky & " " & UliceSCislemDomuABytu & "-ZAHÁJENO?body=" & TextObjednavka & "' style='padding:10px 20px; background-color:#008CBA; color:white; text-decoration:none;'>Potvrdit realizaci objednávky</a>    "
-
+                "<a href='mailto:" & EmailOdesilatele & "?subject=Objednávka " & CisloObjednavky & " " & UliceSCislemDomuABytu & "-PŘIJATO?body=" & TextPozdrav & " potvrzujeme přijetí nové " & TextObjednavka & "' style='padding:10px 20px; background-color:#4CAF50; color:white; text-decoration:none;'>Potvrdit přijetí objednávky</a>    " & _
+                "<a href='mailto:" & EmailOdesilatele & "?subject=Objednávka " & CisloObjednavky & " " & UliceSCislemDomuABytu & "-ZAHÁJENO?body=" & TextPozdrav & " potvrzujeme zahájení " & TextObjednavka & "' style='padding:10px 20px; background-color:#008CBA; color:white; text-decoration:none;'>Potvrdit realizaci objednávky</a>    " & _
+                "<a href='mailto:" & EmailOdesilatele & "?subject=Objednávka " & CisloObjednavky & " " & UliceSCislemDomuABytu & "-UKONČENO?body=" & TextPozdrav & " potvrzujeme dokončení " & TextObjednavka & "' style='padding:10px 20px; background-color:#4C0000; color:white; text-decoration:none;'>Potvrdit dokončení objednávky</a>    "
+    
     ' tělo zprávy staví kompletní email dohromady
     TeloZpravy = "<html><body>" & _
                 TeloObjednavka & _
@@ -193,4 +194,3 @@ Sub GenerateEmailWithOrderAndButtons()
     Set OutlookMail = Nothing
     Set OutlookApp = Nothing
 End Sub
-
