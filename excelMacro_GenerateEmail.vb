@@ -166,7 +166,7 @@ Sub GenerateEmailWithOrderAndButtons()
     TextObjednavka = "objednávky číslo: " & CisloObjednavky & _
                      "%0Astručný popis objednávky: " & PopisObjednavky
 
-    TeloObjednavka = "<div><p style='margin: 0;'>Dobrý den,</p><br><br>" & _
+    TeloObjednavka = "<div><p style='margin: 0;'>Dobrý den,</p><br>" & _
                 "<p style='margin: 0;'>zasíláme Vám objednávku č.<b>" & CisloObjednavky & "</b></p><br>" & _
                 "<table style='width:100%'>" & _
                     "<tr>" & _
