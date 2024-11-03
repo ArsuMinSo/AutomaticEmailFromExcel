@@ -141,8 +141,10 @@ Sub GenerateEmailWithOrderAndButtons()
     
     ' Sestavení těla zprávy podle toho, zda je vyplněno číslo bytu
     If Not CisloBytu = "" Then
+        UliceSCislemDomuABytu = Ulice & " " & CisloObjektu & "_" & CisloBytu
         TelozpravyMisto = "<p>Objednávka je na ulici: <b>" & Ulice & " v bytovém domě s číslem: " & CisloObjektu & " a číslem bytu: " & CisloBytu & "</b>.</p>"
     Else
+        UliceSCislemDomuABytu = Ulice & " " & CisloObjektu
         TelozpravyMisto = "<p>Objednávka je na ulici: <b>" & Ulice & " v domě s číslem: " & CisloObjektu & "</b>.</p>"
     End If
 
@@ -213,7 +215,7 @@ Sub GenerateEmailWithOrderAndButtons()
     ' Nastavení e-mailu (příjemce, předmět, tělo zprávy)
     With OutlookMail
         .To = EmailPrijemce
-        .Subject = "Nová objednávka " & CisloObjednavky & " " & UliceSCislemDomuABytu
+        .Subject = "Objednávka " & CisloObjednavky & " " & UliceSCislemDomuABytu & " " & Kategorie
         .HTMLBody = TeloZpravy
         .Display ' Zobrazí e-mail, lze použít .Send pro okamžité odeslání
     End With
