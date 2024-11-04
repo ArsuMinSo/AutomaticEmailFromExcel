@@ -132,10 +132,12 @@ Sub GenerateEmailWithOrderAndButtons()
     Set ShodaPrijemce = InfoListPrijemce.Columns(2).Find(What:=Prijemce, LookAt:=xlWhole)
     
     ' Kontrola, zda byl příjemce nalezen
-    If Not ShodaPrijemce = "" And Not ShodaPrijemce Is Nothing Then
-        Radek = ShodaPrijemce.Row
-        ' Načtení e-mailu příjemce
-        EmailPrijemce = InfoListPrijemce.Cells(Radek, 3).Value
+    If Not ShodaPrijemce Is Nothing Then
+        If Not ShodaPrijemce = "" Then
+            Radek = ShodaPrijemce.Row
+            ' Načtení e-mailu příjemce
+            EmailPrijemce = InfoListPrijemce.Cells(Radek, 3).Value
+        End If
     Else
         ' Pokud nebyl příjemce nalezen, zobrazí se upozornění
         MsgBox ("Nebyl nalezen žádný příjemce " & Prijemce & ".")
@@ -144,10 +146,8 @@ Sub GenerateEmailWithOrderAndButtons()
     ' Sestavení těla zprávy podle toho, zda je vyplněno číslo bytu
     If Not CisloBytu = "" Then
         UliceSCislemDomuABytu = Ulice & " " & CisloObjektu & "_" & CisloBytu
-        TelozpravyMisto = "<p>Objednávka je na ulici: <b>" & Ulice & " v bytovém domě s číslem: " & CisloObjektu & " a číslem bytu: " & CisloBytu & "</b>.</p>"
     Else
         UliceSCislemDomuABytu = Ulice & " " & CisloObjektu
-        TelozpravyMisto = "<p>Objednávka je na ulici: <b>" & Ulice & " v domě s číslem: " & CisloObjektu & "</b>.</p>"
     End If
 
     If Not Web = "" Then
@@ -167,11 +167,11 @@ Sub GenerateEmailWithOrderAndButtons()
                      "%0Astručný popis objednávky: " & PopisObjednavky
 
     TeloObjednavka = "<div><p style='margin: 0;'>Dobrý den,</p><br>" & _
-                "<p style='margin: 0;'>zasíláme Vám objednávku č.<b>" & CisloObjednavky & "</b></p><br>" & _
-                "<table style='width:100%'>" & _
+                "<p style='margin: 0;'>zasíláme Vám objednávku č. <b>" & CisloObjednavky & "</b></p><br>" & _
+                "<table style='width:100%; font-size:13px; font-family: Calibri'>" & _
                     "<tr>" & _
-                        "<td>Kategorie:</td>" & _
-                        "<td><b>" & Kategorie & "</b></td>" & _
+                        "<td style='width:50%'>Kategorie:</td>" & _
+                        "<td style='width:50%'><b>" & Kategorie & "</b></td>" & _
                     "</tr>" & _
                     "<tr>" & _
                         "<td>Popis opravy:</td>" & _
@@ -181,7 +181,7 @@ Sub GenerateEmailWithOrderAndButtons()
                         "<td>Adresa provedení opravy:</td>" & _
                         "<td><b>" & UliceSCislemDomuABytu & "</b></td>" & _
                     "</tr>" & _
-                TextKontaktNaHlasene & _
+                        TextKontaktNaHlasene & _
                     "<tr>" & _
                         "<td>Datum a čas vystavení:</td>" & _
                         "<td><b>" & Format(Now, "dd.mm.yyyy HH:MM") & "</b></td>" & _
@@ -192,7 +192,7 @@ Sub GenerateEmailWithOrderAndButtons()
                     "</tr>" & _
                 "</table></div>"
                  
-    TeloPodpis = "<br><br>S pozdravem, <div><div style='color: blue; line-height: 1;'>" & _
+    TeloPodpis = "<br><br>S pozdravem <div><div style='color: blue; line-height: 1;'>" & _
                 "<p style='margin-top: 15; margin-bottom: 0'><b>" & TitulOdesilatele & " " & JmenoOdesilatele & " " & PrijmeniOdesilatele & "</b></p>" & _
                 "<p style='margin-top: 0; margin-bottom: 0'>" & HodnostOdesilatele & "</p>" & _
                 "<p style='margin-top: 0; margin-bottom: 0'>" & OdborOdesilatele & "</p>" & _
@@ -201,8 +201,8 @@ Sub GenerateEmailWithOrderAndButtons()
                 "<p style='margin-top: 0; margin-bottom: 0'>" & AdresaUradu & "</p>" & _
                 TextTelefon & _
                 TextWeb & _
-                "<p style='color: green; margin-top: 20; margin-bottom: 12'>Myslete na přírodu. Skutečně potřebujete vytisknout tento e-mail?</p>" & _
-                "<p style='color: blue; margin-top: 20; margin-bottom: 12'>Obsah tohoto e-mailu včetně jeho příloh je důvěrný. Pokud nejste oprávněným adresátem tohoto emailu, <b>nejste oprávněni tuto zprávu odeslat, uložit ji, zveřejnit či naložit s ní jakýmkoliv jiným způsobem</b>. V takovém případě prosím informujte odesílatele a tento e-mail včetně jeho příloh vymažte trvale ze svého systému.</p></div>"
+                "<p style='color: green; margin-top: 20; margin-bottom: 12; font-size: 12px'>Myslete na přírodu. Skutečně potřebujete vytisknout tento e-mail?</p>" & _
+                "<p style='color: blue; margin-top: 20; margin-bottom: 12; font-size: 12px'>Obsah tohoto e-mailu včetně jeho příloh je důvěrný. Pokud nejste oprávněným adresátem tohoto emailu, <b>nejste oprávněni tuto zprávu odeslat, uložit ji, zveřejnit či naložit s ní jakýmkoliv jiným způsobem</b>. V takovém případě prosím informujte odesílatele a tento e-mail včetně jeho příloh vymažte trvale ze svého systému.</p></div>"
 
     ' Moje iniciály
     TeloPata = "<div><hr style='border:none; border-top:1px solid #ccc;'/>" & _
@@ -210,17 +210,17 @@ Sub GenerateEmailWithOrderAndButtons()
                 "<p style='font-size:9px; color:#555; text-align:center; margin-top: 0; margin-bottom: 0'>Template created by: Šimon Raus | <a href='mailto:simon.raus@email.cz' style='color:#666; text-decoration:none;'>simon.raus@email.cz</a></p></div>"
     
     ' Tlačítka
-    TeloTlacitka = "<p style='margin-top: 30px;'>Zároveň Vás žádáme o potvrzení této objednávky níže uvedeným tlačítkem. Jakmile budete zahajovat realizaci objednávky, tak nás opět informujte kliknutím na tlačítko „Potvrdit realizaci objednávky“</p>" & _
-                "<table style='width:100%; text-align:center'>" & _
+    TeloTlacitka = "<p style='margin-top: 30px;'>Zároveň Vás žádáme o potvrzení této objednávky tlačítkem „<b>Přijetí objednávky</b>“.<br>Realizaci objednávky nám potvrďte tlačítkem „<b>Realizace objednávky</b>“.<br>Ukončení realizace nám potvrďte tlačítkem „<b>Ukončení objednávky</b>“.</p>" & _
+                "<table style='width:100%; text-align:center; font-family: Calibri'>" & _
                     "<tr>" & _
-                        "<td style='background-color:#4CAF50'><a href='mailto:" & EmailOdesilatele & "?subject=Objednávka " & CisloObjednavky & " " & UliceSCislemDomuABytu & "-PŘIJATO?body=" & TextPozdrav & " potvrzujeme přijetí nové " & TextObjednavka & "' style='color:white; text-decoration:none;'>Potvrdit přijetí objednávky</a></td>" & _
-                        "<td style='background-color:#008CBA'><a href='mailto:" & EmailOdesilatele & "?subject=Objednávka " & CisloObjednavky & " " & UliceSCislemDomuABytu & "-ZAHÁJENO?body=" & TextPozdrav & " potvrzujeme zahájení " & TextObjednavka & "' style='color:white; text-decoration:none;'>Potvrdit realizaci objednávky</a></td>" & _
-                        "<td style='background-color:#4C0000'><a href='mailto:" & EmailOdesilatele & "?subject=Objednávka " & CisloObjednavky & " " & UliceSCislemDomuABytu & "-UKONČENO?body=" & TextPozdrav & " potvrzujeme dokončení " & TextObjednavka & "' style='color:white; text-decoration:none;'>Potvrdit dokončení objednávky</a></td>" & _
+                        "<td style='background-color:#4CAF50; width:33%; font-size: 13px;'><a href='mailto:" & EmailOdesilatele & "?subject=Objednávka " & CisloObjednavky & " " & UliceSCislemDomuABytu & "-PŘIJATO?body=" & TextPozdrav & " potvrzujeme přijetí nové " & TextObjednavka & "' style='color:white; text-decoration:none;'>Potvrdit přijetí objednávky</a></td>" & _
+                        "<td style='background-color:#008CBA; width:33%; font-size: 13px;'><a href='mailto:" & EmailOdesilatele & "?subject=Objednávka " & CisloObjednavky & " " & UliceSCislemDomuABytu & "-ZAHÁJENO?body=" & TextPozdrav & " potvrzujeme zahájení " & TextObjednavka & "' style='color:white; text-decoration:none;'>Potvrdit realizaci objednávky</a></td>" & _
+                        "<td style='background-color:#4C0000; width:33%; font-size: 13px;'><a href='mailto:" & EmailOdesilatele & "?subject=Objednávka " & CisloObjednavky & " " & UliceSCislemDomuABytu & "-UKONČENO?body=" & TextPozdrav & " potvrzujeme dokončení " & TextObjednavka & "' style='color:white; text-decoration:none;'>Potvrdit dokončení objednávky</a></td>" & _
                     "</tr>" & _
                 "</table>"
     
     ' tělo zprávy staví kompletní email dohromady
-    TeloZpravy = "<html><body>" & _
+    TeloZpravy = "<html><body style='font-family: Calibri; font-size: 13px;'>" & _
                 TeloObjednavka & _
                 TeloTlacitka & _
                 TeloPodpis & _
